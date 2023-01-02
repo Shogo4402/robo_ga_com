@@ -14,6 +14,8 @@ from detectron2.utils.visualizer import Visualizer, ColorMode,VisImage
 from detectron2.config import get_cfg
 import os
 import tensorflow
+sys.path.append("/content/robo_ga_com")
+import tool.robot_function as rof
 
 global iw,ih,ow,oh,PN,MIN_MAX,One_OR_PRO
 iw = 200
@@ -21,6 +23,15 @@ ih = 200
 PN = [100,100,180]
 MIN_MAX = [[0,2],[-2,2],[0,math.pi]]
 One_or_Pro = 1
+  
+def making_robot(fuzzy1_paras,fuzzy2_paras):
+  robot = rof.obj_func(fuzzy_rule1 = fuzzy1_paras["fuzzy_rule1"],set_types1 = fuzzy1_paras["set_types1"],out_level1 = fuzzy1_paras["out_level1"],
+                           fuzzy_rule2 = fuzzy2_paras["fuzzy_rule2"],set_types2 = fuzzy2_paras["set_types2"],out_level2 = fuzzy2_paras["out_level2"],
+                           object_items = ["end_time"])
+  divi1 =  rwf.output_divi(fuzzy1_paras["fuzzy_rule1"],fuzzy1_paras["set_types1"],fuzzy1_paras["Kch1"],fuzzy1_paras["out_level1"])
+  divi2 =  rwf.output_divi( fuzzy2_paras["fuzzy_rule2"], fuzzy2_paras["set_types2"], fuzzy2_paras["Kch2"], fuzzy2_paras["out_level2"])
+  divi_list = divi1+divi2
+  return robot,divi_list
 
 def take_photo(filename='img.jpg', quality=0.8,No=0):
   js = Javascript('''
