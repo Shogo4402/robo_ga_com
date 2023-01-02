@@ -9,6 +9,7 @@ import tool.rw_function as rwf
 # import some common detectron2 utilities
 from detectron2 import model_zoo
 from detectron2.engine import DefaultPredictor, DefaultTrainer
+from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.config import get_cfg
 import os
 
