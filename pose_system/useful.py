@@ -173,4 +173,4 @@ def predict_pose(model,mask):
     img_part = img_change(mask[i])
     predictions = model.predict(img_part)
     pose_list.append(pose_calc(predictions))
-  return np.array(pose_list)
+  return np.array(pose_list).mean(axis=0)
