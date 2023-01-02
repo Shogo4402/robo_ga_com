@@ -79,13 +79,17 @@ def take_photo(filename='img.jpg', quality=0.8,No=0):
 
 def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model): #time_intervalは1ステップ何秒であるかを指定する
     #制御周期か否か判断
+    obj_point = np.array([[0,0,0],[0,0.865,0]])
     time_judge = ((robot.sum_time*10.0)/(time_interval*10.0)).is_integer()
     if time_judge:
         judge_pose_estimation = 1 ###本来は1
         tmp = robot.pose
-        robot.pose = selfpose_function(maskrcnn_predictor,new_model,count)
-        if robot.pose.size == 0:
+        pose_arr = selfpose_function(maskrcnn_predictor,new_model,count)
+        if pose_arr.size == 0:
             robot.pose = tmp
+        else:
+          robot.pose = judge_obj(tmp,obj_point,pose_arr)
+          
         nu,omega=robot.decision(robot.pose)
         robot.nu_m,robot.omega = nu,omega #速度・角速度更新
     else:
@@ -167,6 +171,19 @@ def pose_calc(predictions):
     c+=1
   return pre_li
 
+def judge_obj(theory_pose,obj_point,pose_arr):
+  a = 0.04 
+  b = 0.06 
+  sum_pose = np.array([0.0,0.0,0.0])
+  delta_theory = theory_pose -obj_point
+  if pose_arr.ndim==2:
+    for i in range(len(pose_arr)):
+      index = np.argmin(np.sum((abs(delta_theory - pose_arr[i]))/np.array([2,4,math.pi])*100,axis=1))
+      sum_pose +=  obj_point[index]+pose_arr[index]
+      pose_non = sum_pose/2
+      pose_true = pose_non-np.array([a*math.cos(pose_non[2])-b*math.sin(pose_non[2]),a*math.sin(pose_non[2])+b*math.cos(pose_non[2]),0])
+  return pose_true
+
 def predict_pose(model,mask):
   pose_list = []
   for i in range(len(mask)):
@@ -177,7 +194,7 @@ def predict_pose(model,mask):
   if pose_arr.size==0:
     return pose_arr
   else:
-    return np.array(pose_list).mean(axis=0)
+    return pose_arr
 
 def selfpose_function(maskrcnn_predictor,new_model,number):
   ##画像取得
