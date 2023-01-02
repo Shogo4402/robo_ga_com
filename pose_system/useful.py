@@ -128,12 +128,12 @@ def predict_mask_rcnn(predictor,img):
   masks = np.asarray(outputs["instances"].to("cpu").pred_masks)
   ###注意############################ masks[0] masks
   if masks.ndim == 2:
-    mask_image = img*np.array(masks, dtype=np.uint8).reshape(240,320,-1)
+    mask_image = img*np.array(masks, dtype=np.uint8).reshape(480,640,-1)
     mask_image = mask_image.astype("uint8")
   elif masks.ndim==3:
     masks_list = []
     for i in range(len(masks)):
-      mask_image = img*np.array(masks[i], dtype=np.uint8).reshape(240,320,-1)
+      mask_image = img*np.array(masks[i], dtype=np.uint8).reshape(480,640,-1)
       mask_image = mask_image.astype("uint8")
       masks_list.append(mask_image)
     return np.array(masks_list)
