@@ -173,7 +173,11 @@ def predict_pose(model,mask):
     img_part = img_change(mask[i])
     predictions = model.predict(img_part)
     pose_list.append(pose_calc(predictions))
-  return np.array(pose_list).mean(axis=0)
+  pose_arr =  np.array(pose_list)
+  if pose_arr.size==0:
+    return pose_arr
+  else:
+    return np.array(pose_list).mean(axis=0)
 
 def selfpose_function(maskrcnn_predictor,new_model,number):
   ##画像取得
