@@ -81,7 +81,7 @@ def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model)
     #制御周期か否か判断
     time_judge = ((robot.sum_time*10.0)/(time_interval*10.0)).is_integer()
     if time_judge:
-        judge_pose_estimation = 0 ###本来は1
+        judge_pose_estimation =  ###本来は1
         tmp = robot.pose
         robot.pose = selfpose_function(maskrcnn_predictor,new_model,count)
         if robot.pose.size == 0:
