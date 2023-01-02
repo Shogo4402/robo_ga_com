@@ -6,6 +6,11 @@ import numpy as np
 import math
 import tool.robot_function as rof
 import tool.rw_function as rwf
+# import some common detectron2 utilities
+from detectron2 import model_zoo
+from detectron2.engine import DefaultPredictor, DefaultTrainer
+from detectron2.config import get_cfg
+import os
 
 def take_photo(filename='img.jpg', quality=0.8,No=0):
   js = Javascript('''
