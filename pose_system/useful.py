@@ -81,3 +81,14 @@ def one_step(robot,time_interval,time_detail): #time_intervalは1ステップ何
     #目標切り替えのための軌跡登録
     robot.orbit_register(robot.pose)
     return robot.move_end,judge_pose_estimation
+
+#Mask CNNのpredictor生成
+def making_maskrcnn_predictor(filepath):
+  cfg = get_cfg()
+  cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+  cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # 1クラスのみ
+  cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, filepath)
+  cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.9 ##kakuritu
+  #cfg.MODEL.DEVICE = "cpu"
+  predictor = DefaultPredictor(cfg)
+  return predictor
