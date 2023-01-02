@@ -15,6 +15,13 @@ from detectron2.config import get_cfg
 import os
 import tensorflow
 
+global iw,ih,ow,oh,PN,MIN_MAX,One_OR_PRO
+iw = 200
+ih = 200
+PN = [100,100,180]
+MIN_MAX = [[0,2],[-2,2],[0,math.pi]]
+One_or_Pro = 1
+
 def take_photo(filename='img.jpg', quality=0.8,No=0):
   js = Javascript('''
     async function takePhoto(quality) {
