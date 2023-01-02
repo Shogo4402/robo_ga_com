@@ -97,3 +97,58 @@ def making_maskrcnn_predictor(filepath):
   #cfg.MODEL.DEVICE = "cpu"
   predictor = DefaultPredictor(cfg)
   return predictor
+
+def predict_mask_rcnn(predictor,img):
+  outputs = predictor(img)
+  louver_metadata = MetadataCatalog.get("louver")
+  v = Visualizer(img[:, :, ::-1],metadata=louver_metadata, scale=1.0,instance_mode=ColorMode.IMAGE_BW)
+  v = v.draw_instance_predictions(outputs["instances"].to("cpu"))
+  masks = np.asarray(outputs["instances"].to("cpu").pred_masks)
+  ###注意############################ masks[0] masks
+  if masks.ndim == 2:
+    mask_image = img*np.array(masks, dtype=np.uint8).reshape(240,320,-1)
+    mask_image = mask_image.astype("uint8")
+  elif masks.ndim==3:
+    masks_list = []
+    for i in range(len(masks)):
+      mask_image = img*np.array(masks[i], dtype=np.uint8).reshape(240,320,-1)
+      mask_image = mask_image.astype("uint8")
+      masks_list.append(mask_image)
+    return np.array(masks_list)
+  return mask_image
+
+def making_multi_model(filepath):
+  new_model = tensorflow.keras.models.load_model(filepath)
+  return new_model
+
+def img_change(img):
+  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  # ガウシアンぼかし
+  img = cv2.GaussianBlur(img, (3,3), 0)
+  img = cv2.Laplacian(img, cv2.CV_32F, ksize=1)
+  img = cv2.resize(img, dsize=(iw, ih))/255
+  img = img.reshape(-1,200,200)
+  return img
+
+def result_super_softmax(y_arr,no):
+  x2 = np.linspace(MIN_MAX[no][0], MIN_MAX[no][1], PN[no])
+  seki = y_arr*x2
+  return np.sum(seki)
+
+def pose_calc(predictions):
+  c = 0
+  pre_li = []
+  for pre in predictions:
+    for pre_vp in pre:
+      vp = result_super_softmax(pre_vp,c)
+      pre_li.append(vp)
+    c+=1
+  return pre_li
+
+def predict_pose(model,mask):
+  pose_list = []
+  for i in range(len(mask)):
+    img_part = img_change(mask[i])
+    predictions = model.predict(img_part)
+    pose_list.append(pose_calc(predictions))
+  return np.array(pose_list)
