@@ -77,13 +77,13 @@ def take_photo(filename='img.jpg', quality=0.8,No=0):
     f.write(binary)
   return filename_w
 
-def one_step(robot,time_interval,time_detail): #time_intervalは1ステップ何秒であるかを指定する
+def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model): #time_intervalは1ステップ何秒であるかを指定する
     #制御周期か否か判断
     time_judge = ((robot.sum_time*10.0)/(time_interval*10.0)).is_integer()
     if time_judge:
         judge_pose_estimation = 0 ###本来は1
         tmp = robot.pose
-        robot.pose = selfpose_function(maskrcnn_predictor,new_model,0)
+        robot.pose = selfpose_function(maskrcnn_predictor,new_model,count)
         if robot.pose.size == 0:
             robot.pose = tmp
         nu,omega=robot.decision(robot.pose)
@@ -174,3 +174,14 @@ def predict_pose(model,mask):
     predictions = model.predict(img_part)
     pose_list.append(pose_calc(predictions))
   return np.array(pose_list).mean(axis=0)
+
+def selfpose_function(maskrcnn_predictor,new_model,number):
+  ##画像取得
+  img_path = take_photo(filename='/content/drive/MyDrive/exp_image_folder/img.jpg', quality=0.8,No=number)
+  img = cv2.imread(img_path)
+  #img = cv2.imread("/content/drive/MyDrive/image_sample/image_20220913_1_0.png")
+  #MaskRCNN
+  mask= predict_mask_rcnn(maskrcnn_predictor,img)
+  #マルチタスク位置推定
+  pose_arr = predict_pose(new_model,mask)
+  return pose_arr
