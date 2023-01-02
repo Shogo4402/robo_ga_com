@@ -82,6 +82,10 @@ def one_step(robot,time_interval,time_detail): #time_intervalは1ステップ何
     time_judge = ((robot.sum_time*10.0)/(time_interval*10.0)).is_integer()
     if time_judge:
         judge_pose_estimation = 0 ###本来は1
+        tmp = robot.pose
+        robot.pose = selfpose_function(maskrcnn_predictor,new_model,0)
+        if robot.pose.size == 0:
+            robot.pose = tmp
         nu,omega=robot.decision(robot.pose)
         robot.nu_m,robot.omega = nu,omega #速度・角速度更新
     else:
@@ -95,11 +99,7 @@ def one_step(robot,time_interval,time_detail): #time_intervalは1ステップ何
     robot.li3.append(robot.pose[2])
     robot.now_nos.append(robot.now_no)
     #time_detail秒後の自己位置計算
-    if judge_pose_estimation:
-        #位置更新
-        pass
-    else:
-        robot.pose=robot.state_transition(robot.nu_m,omega,robot.time_detail,robot.pose)
+    robot.pose=robot.state_transition(robot.nu_m,omega,robot.time_detail,robot.pose)
         
     if robot.pose[2] >= 2*math.pi:
         robot.pose[2]=robot.pose[2] - 2*math.pi
