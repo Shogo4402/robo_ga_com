@@ -13,6 +13,7 @@ from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.utils.visualizer import Visualizer, ColorMode,VisImage
 from detectron2.config import get_cfg
 import os
+import tensorflow
 
 def take_photo(filename='img.jpg', quality=0.8,No=0):
   js = Javascript('''
