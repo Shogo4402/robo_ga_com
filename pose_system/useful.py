@@ -202,8 +202,6 @@ def selfpose_function(maskrcnn_predictor,new_model,number):
   img = cv2.imread(img_path)
   #img = cv2.imread("/content/drive/MyDrive/image_sample/image_20220913_1_0.png")
   #MaskRCNN
-  img = cv2.imread("/content/drive/MyDrive/image_sample/image_20220913_1_2.png")
-  img = cv2.resize(img,(640,480))
   mask= predict_mask_rcnn(maskrcnn_predictor,img)
   #マルチタスク位置推定
   pose_arr = predict_pose(new_model,mask)
