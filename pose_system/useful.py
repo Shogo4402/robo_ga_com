@@ -10,6 +10,7 @@ import tool.rw_function as rwf
 from detectron2 import model_zoo
 from detectron2.engine import DefaultPredictor, DefaultTrainer
 from detectron2.data import MetadataCatalog, DatasetCatalog
+from detectron2.utils.visualizer import Visualizer, ColorMode,VisImage
 from detectron2.config import get_cfg
 import os
 
