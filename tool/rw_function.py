@@ -123,7 +123,7 @@ def get_indivi_arr(file_name,sheet_name,size_obj):
     count2 = 0
     compre = 0
     for d in datas:
-        if type(d[0])==int:
+        if type(d[0])==int or type(d[0])==float:
             d1_tmp = d[0]
             d[0]=count
             indivi_list.append(d)
@@ -185,7 +185,7 @@ def option_arr(file_name,sheet_name,option):
     compre_list = []
     compre = 0
     for d in datas:
-        if type(d[0])==int:
+        if type(d[0])==int or type(d[0])==float:
             if compre == 1:
                 compre_list.append(d)
         elif d[0]==option+"_start":
