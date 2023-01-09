@@ -149,11 +149,12 @@ def making_multi_model(filepath):
 
 def img_change(img):
   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-  # ガウシアンぼかし
   img = cv2.GaussianBlur(img, (3,3), 0)
   img = cv2.Laplacian(img, cv2.CV_32F, ksize=1)
-  img = cv2.resize(img, dsize=(iw, ih))/255
-  img = img.reshape(-1,200,200)
+  img = np.where(img < 0, 0, img)
+  img = cv2.resize(img, dsize=(200, 200))
+  max_v = np.max(img)
+  img = img/max_v
   return img
 
 def result_super_softmax(y_arr,no):
