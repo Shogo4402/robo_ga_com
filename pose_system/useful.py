@@ -201,6 +201,7 @@ def predict_pose(model,mask):
 def selfpose_function(maskrcnn_predictor,new_model,number):
   ##画像取得
   img_path = take_photo(filename='/content/drive/MyDrive/exp_image_folder/img.jpg', quality=0.8,No=number)
+  img = cv2.resize(320,240)
   img = cv2.imread(img_path)
   #img = cv2.imread("/content/drive/MyDrive/image_sample/image_20220913_1_0.png")
   #MaskRCNN
