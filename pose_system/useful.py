@@ -89,6 +89,7 @@ def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model)
             robot.pose = tmp
         else:
           robot.pose = judge_obj(tmp,obj_point,pose_arr)
+          print(robot.pose)
           
         nu,omega=robot.decision(robot.pose)
         robot.nu_m,robot.omega = nu,omega #速度・角速度更新
