@@ -189,6 +189,7 @@ def predict_pose(model,mask):
   pose_list = []
   for i in range(len(mask)):
     img_part = img_change(mask[i])
+    img_part = img_part.reshape(-1,200,200)
     predictions = model.predict(img_part)
     pose_list.append(pose_calc(predictions))
   pose_arr =  np.array(pose_list)
