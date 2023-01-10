@@ -112,7 +112,7 @@ def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model)
         robot.pose[2] = robot.pose[2] +2*math.pi
     #目標切り替えのための軌跡登録
     robot.orbit_register(robot.pose)
-    return robot.move_end,judge_pose_estimation
+    return robot.move_end,judge_pose_estimation,tmp
 
 #Mask CNNのpredictor生成
 def making_maskrcnn_predictor(filepath):
