@@ -178,12 +178,13 @@ def judge_obj(theory_pose,obj_point,pose_arr):
   b = 0.06 
   sum_pose = np.array([0.0,0.0,0.0])
   delta_theory = theory_pose -obj_point
-  if pose_arr.ndim==2:
-    for i in range(len(pose_arr)):
-      index = np.argmin(np.sum((abs(delta_theory - pose_arr[i]))/np.array([2,4,math.pi])*100,axis=1))
-      sum_pose +=  obj_point[index]+pose_arr[index]
-      pose_non = sum_pose/2
-      pose_true = pose_non-np.array([a*math.cos(pose_non[2])-b*math.sin(pose_non[2]),a*math.sin(pose_non[2])+b*math.cos(pose_non[2]),0])
+  print(delta_theory)
+  for i in range(pose_arr.shape[0]):
+    index = np.argmin(np.sum((abs(delta_theory - pose_arr[i]))/np.array([2,4,math.pi])*100,axis=1))
+    print(index)
+    sum_pose +=  obj_point[index]+pose_arr[index]
+    pose_non = sum_pose/pose_arr.shape[0]
+    pose_true = pose_non-np.array([a*math.cos(pose_non[2])-b*math.sin(pose_non[2]),a*math.sin(pose_non[2])+b*math.cos(pose_non[2]),0])
   return pose_true
 
 def predict_pose(model,mask):
