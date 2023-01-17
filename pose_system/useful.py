@@ -94,6 +94,7 @@ def one_step(robot,time_interval,time_detail,count,maskrcnn_predictor,new_model)
         nu,omega=robot.decision(robot.pose)
         robot.nu_m,robot.omega = nu,omega #速度・角速度更新
     else:
+        tmp = robot.pose
         judge_pose_estimation = 0
         nu,omega= robot.nu_m,robot.omega
     robot.sum_time = (robot.sum_time*10+(10*time_detail))/10 #合計時間
